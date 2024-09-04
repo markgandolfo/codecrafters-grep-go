@@ -2,7 +2,6 @@ package main
 
 import (
 	// Uncomment this to pass the first stage
-	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -43,18 +42,17 @@ func matchLine(line []byte, pattern string) (bool, error) {
 		return false, fmt.Errorf("unsupported pattern: %q", pattern)
 	}
 
-	if pattern == "\\d" {
-		digitRegex := regexp.MustCompile(pattern)
-		return digitRegex.Match(line), nil
-	}
-
 	var ok bool
 
-	// You can use print statements as follows for debugging, they'll be visible when running tests.
-	fmt.Println("Logs from your program will appear here!")
+	if pattern == "\\d" {
+		digitRegex := regexp.MustCompile(pattern)
+		ok = digitRegex.Match(line)
+	} else if pattern == "\\w" {
+		wordRegex := regexp.MustCompile(pattern)
+		ok = wordRegex.Match(line)
+	}
 
-	// Uncomment this to pass the first stage
-	ok = bytes.ContainsAny(line, pattern)
+	fmt.Printf("ok: %v\n", ok)
 
 	return ok, nil
 }
